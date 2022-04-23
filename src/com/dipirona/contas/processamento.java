@@ -1,23 +1,16 @@
 package com.dipirona.contas;
 
 import java.io.*;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class processamento {
-    static String nome_arquivo = escrita_dados.nome_arquivo();
     static float[] conta_f = new float[1024];
     static int i = 0;
     static float valor = 0, subvalor;
     static String data_completa = data_completa();
     static String nome_conta;
-    public static String data(){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("-dd_MM_yyyy_HH-mm-ss");
-        LocalDateTime now = LocalDateTime.now();
-        return dtf.format(now);
-    }
 
     public static String data_completa(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm:ss");
@@ -59,9 +52,6 @@ public class processamento {
     }
 
     public static void contas_valor(){
-
-        DecimalFormat decimalFormat = new DecimalFormat();
-        decimalFormat.setMaximumFractionDigits(2);
 
         Scanner sc = new Scanner(System.in);
 
@@ -110,12 +100,11 @@ public class processamento {
                         throw new RuntimeException(e);
                     }
                 valor = subvalor + valor;
-                System.out.println("Subtotal = R$"+decimalFormat.format(valor));
+                System.out.println("Subtotal = R$"+valor);
                 i++;
             }
         }
         String data = processamento.data_completa();
-        System.out.format("O total de suas contas são de R$"+decimalFormat.format(valor)+"\nE você pagou %d contas na data de %s\n",i, data);
-        System.out.println("Os dados foram escritos no arquivo "+nome_arquivo);
+        System.out.format("O total de suas contas são de R$"+valor+"\nE você pagou %d contas na data de %s\n",i, data);
     }
 }
