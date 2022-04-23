@@ -1,16 +1,13 @@
 package com.dipirona.contas;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class processamento {
-    public static String conta(){
-        Scanner sc = new Scanner(System.in);
-        String conta_str;
-        conta_str = sc.nextLine();
-        return conta_str;
-    }
+    static String nome_arquivo = escrita_dados.nome_arquivo();
     public static String data(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("-dd_MM_yyyy_HH-mm-ss");
         LocalDateTime now = LocalDateTime.now();
@@ -24,7 +21,18 @@ public class processamento {
     }
 
     public static float contas_valor(){
+        /*try {
+            FileWriter escrever = new FileWriter(nome_arquivo);
+            escrever.write("----------");
+            escrever.write(conta_nome);
+            escrever.write("R$"+conta_f[i]);
+            escrever.write("----------");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }*/ //Escrever as contas no arquivo
+
         Scanner sc = new Scanner(System.in);
+
         float valor = 0, subvalor;
         String conta_str;
         float[] conta_f = new float[1024];
