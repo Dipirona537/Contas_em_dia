@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Contas:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Contas_jar</output-path>
+    <root id="archive" name="Contas.jar">
+      <element id="module-output" name="Contas" />
+    </root>
+  </artifact>
+</component>
