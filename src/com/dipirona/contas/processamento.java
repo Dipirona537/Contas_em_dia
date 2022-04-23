@@ -1,13 +1,18 @@
 package com.dipirona.contas;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class processamento {
     static String nome_arquivo = escrita_dados.nome_arquivo();
+    static float[] conta_f = new float[1024];
+    static int i = 0;
+    static float valor = 0, subvalor;
+    static String data_completa = data_completa();
+    static String nome_conta;
     public static String data(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("-dd_MM_yyyy_HH-mm-ss");
         LocalDateTime now = LocalDateTime.now();
@@ -19,48 +24,98 @@ public class processamento {
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
     }
+    static void escrever_nome()
+        throws  IOException {
+        String dados = "\n"+nome_conta+"\n";
+        FileOutputStream outputStream = new FileOutputStream("doc_temp.temp",true);
+        byte[] dados_b = (dados.getBytes());
+        outputStream.write(dados_b);
+    }
 
-    public static float contas_valor(){
-        /*try {
-            FileWriter escrever = new FileWriter(nome_arquivo);
-            escrever.write("----------");
-            escrever.write(conta_nome);
-            escrever.write("R$"+conta_f[i]);
-            escrever.write("----------");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/ //Escrever as contas no arquivo
+    static void escrever()
+        throws IOException {
+        String dados = String.valueOf(conta_f[i]);
+        dados = "Valor R$"+dados+"\n\n";
+        FileOutputStream outputStream = new FileOutputStream("doc_temp.temp",true);
+        byte[] dados_b = (dados.getBytes());
+        outputStream.write(dados_b);
+    }
+
+    static void escrever_final()
+            throws IOException {
+        String dados = String.valueOf(valor);
+        dados = "Valor total R$"+(dados)+"\n";
+        String conta = String.valueOf(i);
+        conta = "Você pagou "+conta+" Contas.\n";
+        String data_pg = String.valueOf(data_completa);
+        data_pg = "Contas pagas no dia "+data_pg+"\n";
+        FileOutputStream outputStream = new FileOutputStream("doc_temp.temp",true);
+        byte[] dados_b = (dados.getBytes());
+        byte[] conta_b = (conta.getBytes());
+        byte[] data_pg_b = (data_pg.getBytes());
+        outputStream.write(dados_b);
+        outputStream.write(conta_b);
+        outputStream.write(data_pg_b);
+    }
+
+    public static void contas_valor(){
+
+        DecimalFormat decimalFormat = new DecimalFormat();
+        decimalFormat.setMaximumFractionDigits(2);
 
         Scanner sc = new Scanner(System.in);
 
-        float valor = 0, subvalor;
         String conta_str;
-        float[] conta_f = new float[1024];
         for (int i_f = 0;i_f<1024;i_f++){
             conta_f[i_f] = 0;
         }
-        int i = 0;
         while (true){
-            System.out.println("Digite o valor da conta, digite 'sair' para sair");
+            System.out.println("Digite o nome da conta, digite `sair` para sair.");
+            nome_conta = sc.nextLine();
+            if (nome_conta.equals("sair")) {
+                System.out.println("Saindo do programa...");
+                try {
+                    escrever_final();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            }
+            System.out.println("Digite o valor da conta, digite 'sair' para sair.");
             conta_str = sc.nextLine();
             if (conta_str.equals("sair")){
                 System.out.println("Saindo do programa...");
+                try {
+                    escrever_final();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             }else {
-                if (conta_str.matches("[a-zA-Z]+"))
+                while (conta_str.matches("[a-zA-Z]+"))
                 {
-                    System.out.println("Caractere invalido inserido!");
-                }else{
+                    System.out.println("Caractere invalido inserido!, digite apenas números!");
+                    conta_str = sc.nextLine();
+                }
                     conta_f[i] = Float.parseFloat(conta_str);
                     subvalor = conta_f[i];
-                    valor = subvalor + valor;
-                    System.out.println(valor);
-                    i++;
-                }
+                    try {
+                        escrever_nome();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        escrever();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                valor = subvalor + valor;
+                System.out.println("Subtotal = R$"+decimalFormat.format(valor));
+                i++;
             }
         }
         String data = processamento.data_completa();
-        System.out.format("O total de suas contas são de R$%.2f\nE você pagou %d contas na data de %s", valor, i, data);
-        return valor;
+        System.out.format("O total de suas contas são de R$"+decimalFormat.format(valor)+"\nE você pagou %d contas na data de %s\n",i, data);
+        System.out.println("Os dados foram escritos no arquivo "+nome_arquivo);
     }
 }
