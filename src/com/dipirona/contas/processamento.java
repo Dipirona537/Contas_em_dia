@@ -107,4 +107,4 @@ public class processamento {
         String data = processamento.data_completa();
         System.out.format("O total de suas contas são de R$"+valor+"\nE você pagou %d contas na data de %s\n",i, data);
     }
-}
+}//
