@@ -4,28 +4,25 @@
 #include <ctime>
 
 int main() {
-    time_t     now = time(nullptr);
-    struct tm  tstruct{};
-    char       buf[80];
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char buf[80];
     tstruct = *localtime(&now);
     strftime(buf, sizeof(buf), "%Y-%m-%d_%H-%M-%S", &tstruct);
+    std::string buf_s = buf;
 
-    char* nome_arquivo = strdup("Contas");
-    nome_arquivo = strcat(nome_arquivo, buf);
+    std::string nome_arquivo = "Contas"+buf_s+".txt";
 
-    char* comando1 = strdup("ren doc_temp.temp ");
-    comando1 = strcat(comando1, nome_arquivo);
-    strcat(comando1, ".txt");
+    std::string comando1 = "ren doc_temp.temp "+nome_arquivo;
 
-    char* comando2 = strdup("move ");
-    comando2 = strcat(comando2, nome_arquivo);
-    comando2 = strcat(comando2, ".txt");
-    comando2 = strcat(comando2, " C:\\Contas");
+    std::string comando2 = "move "+nome_arquivo+" "+"C:\\Contas";
 
-    printf("%s\n", comando1);
-    printf("%s\n", comando2);
+    printf("%s\n", nome_arquivo.c_str());
+    printf("%s\n", comando1.c_str());
+    printf("%s", comando2.c_str());
 
-    system(comando1);
-    system(comando2);
+
+    system(comando1.c_str());
+    system(comando2.c_str());
     return 0;
 }
